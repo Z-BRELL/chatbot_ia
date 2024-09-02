@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Informations de la session</title>
+  <script>
+    function obtenirSession() {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "http://localhost:5000/sessions_avec_agent", true);
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var sessions = JSON.parse(xhr.responseText);
+          afficherSessions(sessions);
+        }
+      };
+
+      xhr.send();
+    }
+
+    function afficherSessions(sessions) {
+      var listeSession = document.getElementById("sessionDetails");
+      listeSession.innerHTML = "";
+
+      sessions.forEach(function(session) {
+        var details = `
+          <li><strong>Session ID:</strong> ${session['session_id']}</li>
+          <li><strong>User ID:</strong> ${session['user_id']}</li>
+          <li><strong>Request Count:</strong> ${session['request_count']}</li>
+          <li><strong>Last Interaction:</strong> ${session['last_interaction']}</li>
+          <li><strong>With Agent:</strong> ${session['with_agent']}</li>
+          <hr>
+        `;
+        listeSession.innerHTML += details;
+      });
+    }
+  </script>
+</head>
+<body>
+  <h1>Informations de la session</h1>
+  <button onclick="obtenirSession()">Obtenir les informations de la session</button>
+  <ul id="sessionDetails"></ul>
+</body>
+</html>
